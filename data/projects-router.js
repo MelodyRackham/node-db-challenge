@@ -8,10 +8,28 @@ router.get('/', (req, res) => {
   projects
     .getProjects()
     .then(projects => {
+      projects.map(project => {
+        if (project.completed === 0) {
+          project.completed = false;
+        } else {
+          project.completed = true;
+        }
+      });
       res.status(200).json(projects);
     })
     .catch(err => {
-      res.status(500).json({ message: 'error' });
+      res.status(500).json({ message: 'Failed to get projects' });
+    });
+});
+router.post('/', (req, res) => {
+  const project = req.body;
+  projects
+    .addProject(project)
+    .then(project => {
+      res.status(200).json(project);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to add project' });
     });
 });
 
